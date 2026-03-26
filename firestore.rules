@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Rides collection
+    match /rides/{rideId} {
+      // Anyone can read active rides
+      allow read: if resource.data.status == 'active';
+      
+      // Only authenticated users can create rides
+      allow create: if isAuthenticated() 
+        && request.resource.data.driverId == request.auth.uid
+        && request.resource.data.status == 'active'
+        && request.resource.data.capacity >= 1
+        && request.resource.data.capacity <= 8;
+      
+      // Only the driver can update their ride
+      allow update: if isOwner(resource.data.driverId)
+        && request.resource.data.driverId == resource.data.driverId
+        && request.resource.data.passengerIds.size() <= request.resource.data.capacity;
+      
+      // Only the driver can delete their ride
+      allow delete: if isOwner(resource.data.driverId);
+    }
+    
+    // Ride requests collection
+    match /rideRequests/{requestId} {
+      // Anyone can read open requests
+      allow read: if resource.data.status == 'open';
+      
+      // Only authenticated users can create requests
+      allow create: if isAuthenticated()
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.status == 'open';
+      
+      // Only the requester can update their request
+      allow update: if isOwner(resource.data.requesterId);
+      
+      // Only the requester can delete their request
+      allow delete: if isOwner(resource.data.requesterId);
+    }
+  }
+}
