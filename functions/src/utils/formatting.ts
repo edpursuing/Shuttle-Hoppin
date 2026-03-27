@@ -25,12 +25,13 @@ export function formatTime(timestamp: Timestamp, includeDate: boolean = false): 
     return timeStr;
   }
   
-  // Check if same day
-  const isToday = date.toDateString() === now.toDateString();
-  
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const isTomorrow = date.toDateString() === tomorrow.toDateString();
+  // Compare dates in Eastern time so "Today/Tomorrow" reflects the user's day, not UTC
+  const toETDateStr = (d: Date) =>
+    d.toLocaleDateString('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' });
+
+  const isToday = toETDateStr(date) === toETDateStr(now);
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const isTomorrow = toETDateStr(date) === toETDateStr(tomorrow);
   
   if (isToday) {
     return `Today at ${timeStr}`;

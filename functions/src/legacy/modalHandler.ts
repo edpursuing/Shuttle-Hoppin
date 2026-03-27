@@ -22,6 +22,29 @@ import { getLocationDisplay } from '../utils/config';
 import { config } from '../utils/config';
 
 /**
+ * Parse a date string and time string selected by a user in Eastern Time.
+ * Slack date/time pickers return local values with no timezone attached.
+ * Cloud Functions run in UTC, so a naive `new Date("2025-03-27T23:00:00")`
+ * stores 11 PM UTC (= 7 PM ET) instead of 11 PM ET (= 3 AM UTC next day).
+ */
+function parseEasternTime(dateStr: string, timeStr: string): Date {
+  // Parse as UTC first to get a concrete Date to probe the offset from
+  const asUtc = new Date(`${dateStr}T${timeStr}:00Z`);
+  // Get the ET offset at this specific UTC moment (handles DST automatically)
+  const utcHour = parseInt(
+    asUtc.toLocaleString('en-US', { timeZone: 'UTC', hour: 'numeric', hour12: false, hourCycle: 'h23' })
+  );
+  const etHour = parseInt(
+    asUtc.toLocaleString('en-US', { timeZone: 'America/New_York', hour: 'numeric', hour12: false, hourCycle: 'h23' })
+  );
+  let offsetHours = etHour - utcHour;
+  if (offsetHours > 12) offsetHours -= 24;
+  if (offsetHours < -12) offsetHours += 24;
+  // Convert "this local ET time" to UTC by subtracting the ET offset
+  return new Date(asUtc.getTime() - offsetHours * 60 * 60 * 1000);
+}
+
+/**
  * Handle offer ride modal submission
  */
 export async function handleOfferRideSubmit(payload: any): Promise<void> {
@@ -45,8 +68,8 @@ export async function handleOfferRideSubmit(payload: any): Promise<void> {
     const isCustomTo = to === 'custom';
     const customLocation = isCustomTo ? values.custom_location_block?.custom_location_input?.value : undefined;
 
-    // Combine date and time
-    const departureTime = new Date(`${date}T${time}:00`);
+    // Combine date and time, treating user input as Eastern Time
+    const departureTime = parseEasternTime(date, time);
 
     // Validate (just log warnings, don't block)
     const validation = validateRideOffer({ from, to, departureTime, capacity, notes, customLocation });
@@ -190,8 +213,8 @@ export async function handleRequestRideSubmit(payload: any): Promise<void> {
     const isCustomTo = to === 'custom';
     const customLocation = isCustomTo ? values.custom_location_block?.custom_location_input?.value : undefined;
 
-    // Combine date and time
-    const neededBy = new Date(`${date}T${time}:00`);
+    // Combine date and time, treating user input as Eastern Time
+    const neededBy = parseEasternTime(date, time);
 
     // Validate (just log warnings, don't block)
     const validation = validateRideRequest({ from, to, neededBy, flexibility: flexibilityMinutes, notes, customLocation });
