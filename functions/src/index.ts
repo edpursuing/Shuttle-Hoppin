@@ -7,6 +7,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { handleSlackInteraction } from './legacy/slackHandler';
+import { slackOAuthCallback } from './auth/slackOAuthCallback';
 
 // Initialize Firebase Admin
 admin.initializeApp();
@@ -15,6 +16,8 @@ admin.initializeApp();
  * Main HTTP endpoint for all Slack interactions
  * Handles: slash commands, button clicks, modal submissions
  */
+export { slackOAuthCallback };
+
 export const slackHandler = functions.https.onRequest(async (req, res) => {
   try {
     await handleSlackInteraction(req, res);
