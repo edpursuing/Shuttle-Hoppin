@@ -8,15 +8,11 @@
  * - Constraints and defaults
  */
 
-import * as functions from 'firebase-functions';
-
-// Load environment variables
-// In production: use Firebase config
-// In local dev: use .env file
-const SLACK_BOT_TOKEN = functions.config().slack?.bot_token || process.env.SLACK_BOT_TOKEN || '';
-const SLACK_SIGNING_SECRET = functions.config().slack?.signing_secret || process.env.SLACK_SIGNING_SECRET || '';
-const SLACK_APP_ID = functions.config().slack?.app_id || process.env.SLACK_APP_ID || '';
-const SLACK_SHUTTLE_CHANNEL = functions.config().slack?.shuttle_channel || process.env.SLACK_SHUTTLE_CHANNEL || 'shuttle';
+// Load environment variables from .env (local dev) or Cloud Functions environment (production)
+const SLACK_BOT_TOKEN      = process.env.SLACK_BOT_TOKEN || '';
+const SLACK_SIGNING_SECRET = process.env.SLACK_SIGNING_SECRET || '';
+const SLACK_APP_ID         = process.env.SLACK_APP_ID || '';
+const SLACK_SHUTTLE_CHANNEL = process.env.SLACK_SHUTTLE_CHANNEL || 'shuttle';
 
 // Only throw error if we're actually running (not during build/analysis)
 if ((!SLACK_BOT_TOKEN || !SLACK_SIGNING_SECRET) && process.env.FUNCTION_TARGET) {
