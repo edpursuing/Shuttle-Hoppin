@@ -17,7 +17,7 @@ const SLACK_WORKSPACE_ID  = process.env.SLACK_WORKSPACE_ID || ''
 const FRONTEND_URL        = process.env.FRONTEND_URL || 'https://pursuit-shuttle.web.app'
 const REDIRECT_URI        = process.env.SLACK_REDIRECT_URI || ''
 
-export const slackOAuthCallback = onRequest(async (req, res) => {
+export const slackOAuthCallback = onRequest({ invoker: 'public' }, async (req, res) => {
   const { code, error } = req.query as Record<string, string>
 
   if (error) {

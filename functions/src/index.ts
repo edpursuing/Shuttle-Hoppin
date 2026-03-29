@@ -8,15 +8,21 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import { handleSlackInteraction } from './legacy/slackHandler';
 import { slackOAuthCallback } from './auth/slackOAuthCallback';
+import { completeOnboarding } from './users/completeOnboarding';
 
 // Initialize Firebase Admin
-admin.initializeApp();
+// serviceAccountId is required in Cloud Run (v2) so custom tokens are signed
+// by the Firebase Admin SA rather than the default Compute SA.
+admin.initializeApp({
+  serviceAccountId: 'firebase-adminsdk-fbsvc@pursuit-shuttle.iam.gserviceaccount.com',
+});
 
 /**
  * Main HTTP endpoint for all Slack interactions
  * Handles: slash commands, button clicks, modal submissions
  */
 export { slackOAuthCallback };
+export { completeOnboarding };
 
 export const slackHandler = functions.https.onRequest(async (req, res) => {
   try {
