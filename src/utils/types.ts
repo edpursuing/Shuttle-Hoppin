@@ -6,7 +6,7 @@ export type RideStatus = 'open' | 'in-progress' | 'completed' | 'cancelled'
 export type DriverStatus = 'pending' | 'on-my-way' | 'at-pickup' | 'running-late'
 
 export interface Rider {
-  userId: string
+  uid: string
   displayName: string
   avatarUrl: string
   bookedAt: Timestamp
