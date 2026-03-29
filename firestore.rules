@@ -1,52 +1,43 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Helper functions
+
     function isAuthenticated() {
       return request.auth != null;
     }
-    
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
-    
-    // Rides collection
+
+    // Rides — any authenticated user can read; all writes go through
+    // Cloud Functions (Admin SDK bypasses rules)
     match /rides/{rideId} {
-      // Anyone can read active rides
-      allow read: if resource.data.status == 'active';
-      
-      // Only authenticated users can create rides
-      allow create: if isAuthenticated() 
-        && request.resource.data.driverId == request.auth.uid
-        && request.resource.data.status == 'active'
-        && request.resource.data.capacity >= 1
-        && request.resource.data.capacity <= 8;
-      
-      // Only the driver can update their ride
-      allow update: if isOwner(resource.data.driverId)
-        && request.resource.data.driverId == resource.data.driverId
-        && request.resource.data.passengerIds.size() <= request.resource.data.capacity;
-      
-      // Only the driver can delete their ride
-      allow delete: if isOwner(resource.data.driverId);
+      allow read: if isAuthenticated();
+      allow write: if false;
     }
-    
-    // Ride requests collection
-    match /rideRequests/{requestId} {
-      // Anyone can read open requests
-      allow read: if resource.data.status == 'open';
-      
-      // Only authenticated users can create requests
-      allow create: if isAuthenticated()
-        && request.resource.data.requesterId == request.auth.uid
-        && request.resource.data.status == 'open';
-      
-      // Only the requester can update their request
-      allow update: if isOwner(resource.data.requesterId);
-      
-      // Only the requester can delete their request
-      allow delete: if isOwner(resource.data.requesterId);
+
+    // Users — each user reads and writes their own profile.
+    // completeOnboarding / offerRide write via Admin SDK so rules don't apply.
+    match /users/{userId} {
+      allow read:  if isOwner(userId);
+      allow write: if isOwner(userId);
+
+      match /private/{doc} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Stops — seeded via Admin SDK; read-only for authenticated clients
+    match /stops/{stopId} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Cancellations — users can read their own records only
+    match /cancellations/{cancellationId} {
+      allow read:  if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow write: if false;
     }
   }
 }
