@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from 'firebase-functions/v2/https'
 import { getFirestore, Timestamp } from 'firebase-admin/firestore'
+import { sendRideNotification } from '../notifications/sendRideNotification'
 
 interface OfferRideData {
   direction: 'to-hq' | 'from-hq'
@@ -69,6 +70,19 @@ export const offerRide = onCall(async (request) => {
     createdAt:       now,
     updatedAt:       now,
   })
+
+  // Fire-and-forget — notification failure should not fail the ride creation
+  sendRideNotification({
+    rideId:        rideRef.id,
+    driverId:      uid,
+    driverName:    userData.displayName || '',
+    direction:     data.direction,
+    stopId:        data.stopId,
+    stopName:      data.stopName,
+    customLocation: data.customLocation || null,
+    departureTime,
+    totalSeats:    data.totalSeats,
+  }).catch(err => console.error('sendRideNotification error:', err))
 
   return { rideId: rideRef.id }
 })
