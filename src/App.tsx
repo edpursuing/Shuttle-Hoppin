@@ -9,6 +9,7 @@ import { AuthCallback } from './pages/AuthCallback'
 import { OnboardingFlow } from './pages/OnboardingFlow'
 import { RideBoard } from './pages/RideBoard'
 import { RideDetail } from './pages/RideDetail'
+import { MyRides } from './pages/MyRides'
 import { OfferRide } from './pages/OfferRide'
 import { ProfilePage } from './pages/ProfilePage'
 
@@ -41,6 +42,14 @@ function App() {
           <ProtectedRoute>
             <OnboardingGuard>
               <RideBoard />
+            </OnboardingGuard>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/my-rides" element={
+          <ProtectedRoute>
+            <OnboardingGuard>
+              <MyRides />
             </OnboardingGuard>
           </ProtectedRoute>
         } />
