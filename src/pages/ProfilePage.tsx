@@ -155,8 +155,8 @@ export function ProfilePage() {
           onClick={handleSignOut}
           style={{
             width: '100%', padding: '14px', borderRadius: '10px',
-            background: 'none', border: '1.5px solid #E0E0E0',
-            color: '#E05252', fontSize: '15px', fontWeight: 500,
+            background: '#E05252', border: 'none',
+            color: '#fff', fontSize: '15px', fontWeight: 600,
             cursor: 'pointer', marginTop: '8px',
           }}
         >

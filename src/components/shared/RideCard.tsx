@@ -60,7 +60,7 @@ export function RideCard({ ride, isUrgent = false }: RideCardProps) {
             padding: '3px 8px',
             borderRadius: '4px',
           }}>
-            LEAVING IN {countdown(ride.departureTime.seconds)}
+            {(() => { const c = countdown(ride.departureTime.seconds); return c === 'Now' ? 'LEAVING NOW' : `LEAVING IN ${c}` })()}
           </span>
         ) : (
           <span style={{ fontSize: '11px', color: '#666' }}>

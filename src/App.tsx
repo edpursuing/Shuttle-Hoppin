@@ -10,6 +10,7 @@ import { OnboardingFlow } from './pages/OnboardingFlow'
 import { RideBoard } from './pages/RideBoard'
 import { RideDetail } from './pages/RideDetail'
 import { MyRides } from './pages/MyRides'
+import { AlertsPage } from './pages/AlertsPage'
 import { OfferRide } from './pages/OfferRide'
 import { ProfilePage } from './pages/ProfilePage'
 
@@ -58,6 +59,14 @@ function App() {
           <ProtectedRoute>
             <OnboardingGuard>
               <RideDetail />
+            </OnboardingGuard>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/alerts" element={
+          <ProtectedRoute>
+            <OnboardingGuard>
+              <AlertsPage />
             </OnboardingGuard>
           </ProtectedRoute>
         } />
