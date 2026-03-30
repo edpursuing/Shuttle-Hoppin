@@ -13,6 +13,7 @@ import { offerRide } from './rides/offerRide'
 import { bookRide } from './rides/bookRide'
 import { cancelBooking } from './rides/cancelBooking'
 import { updateDriverStatus } from './rides/updateDriverStatus';
+import { expireRides } from './rides/expireRides';
 
 // Initialize Firebase Admin
 // serviceAccountId is required in Cloud Run (v2) so custom tokens are signed
@@ -31,6 +32,7 @@ export { offerRide };
 export { bookRide };
 export { cancelBooking };
 export { updateDriverStatus };
+export { expireRides };
 
 export const slackHandler = functions.https.onRequest(async (req, res) => {
   try {
