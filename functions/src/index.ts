@@ -11,7 +11,8 @@ import { slackOAuthCallback } from './auth/slackOAuthCallback';
 import { completeOnboarding } from './users/completeOnboarding';
 import { offerRide } from './rides/offerRide'
 import { bookRide } from './rides/bookRide'
-import { cancelBooking } from './rides/cancelBooking';
+import { cancelBooking } from './rides/cancelBooking'
+import { updateDriverStatus } from './rides/updateDriverStatus';
 
 // Initialize Firebase Admin
 // serviceAccountId is required in Cloud Run (v2) so custom tokens are signed
@@ -29,6 +30,7 @@ export { completeOnboarding };
 export { offerRide };
 export { bookRide };
 export { cancelBooking };
+export { updateDriverStatus };
 
 export const slackHandler = functions.https.onRequest(async (req, res) => {
   try {

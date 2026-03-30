@@ -8,8 +8,9 @@ import { MtaBadge } from '../components/shared/MtaBadge'
 import { AppLayout } from '../components/layout/AppLayout'
 import { STOPS } from '../utils/constants'
 
-const bookRideFn      = httpsCallable(functions, 'bookRide')
-const cancelBookingFn = httpsCallable(functions, 'cancelBooking')
+const bookRideFn            = httpsCallable(functions, 'bookRide')
+const cancelBookingFn       = httpsCallable(functions, 'cancelBooking')
+const updateDriverStatusFn  = httpsCallable(functions, 'updateDriverStatus')
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -70,12 +71,75 @@ function RiderRow({ name, avatarUrl }: { name: string; avatarUrl: string }) {
   )
 }
 
+// ── Driver controls ───────────────────────────────────────────────────────────
+
+const DRIVER_STATUSES: { value: string; label: string }[] = [
+  { value: 'pending',      label: 'Not yet en route' },
+  { value: 'on-my-way',   label: 'On my way'         },
+  { value: 'at-pickup',   label: 'At pickup'         },
+  { value: 'running-late', label: 'Running late'     },
+]
+
+function DriverControls({ rideId, currentStatus }: { rideId: string; currentStatus: string }) {
+  const [updating, setUpdating] = useState(false)
+
+  async function handleStatus(status: string) {
+    if (status === currentStatus || updating) return
+    setUpdating(true)
+    try {
+      await updateDriverStatusFn({ rideId, status })
+    } finally {
+      setUpdating(false)
+    }
+  }
+
+  return (
+    <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0', padding: '16px', marginBottom: '12px' }}>
+      <p style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
+        Your status
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        {DRIVER_STATUSES.map(({ value, label }) => {
+          const active = currentStatus === value
+          return (
+            <button
+              key={value}
+              onClick={() => handleStatus(value)}
+              disabled={updating}
+              style={{
+                padding: '10px 14px',
+                borderRadius: '8px',
+                border: active ? '1.5px solid #2E86C1' : '1.5px solid #E0E0E0',
+                background: active ? '#EBF4FB' : '#fff',
+                color: active ? '#2E86C1' : '#555',
+                fontSize: '13px',
+                fontWeight: active ? 500 : 400,
+                cursor: updating ? 'not-allowed' : 'pointer',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <div style={{
+                width: '6px', height: '6px', borderRadius: '50%', flexShrink: 0,
+                background: active ? '#2E86C1' : '#D0D0D0',
+              }} />
+              {label}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 export function RideDetail() {
   const { rideId }    = useParams<{ rideId: string }>()
   const navigate      = useNavigate()
-  const { user }      = useAuthStore()
+  const { user, uid } = useAuthStore()
   const { ride, loading, notFound } = useRideDetail(rideId ?? '')
   const [acting, setActing]         = useState(false)
   const [error, setError]           = useState<string | null>(null)
@@ -106,8 +170,8 @@ export function RideDetail() {
   const stop      = STOPS.find(s => s.id === ride.stopId)
   const lines     = stop?.lines || []
   const isCustom  = ride.stopId === 'custom'
-  const isDriver  = user?.slackId === ride.driverId
-  const isBooked  = ride.riders.some(r => r.uid === user?.slackId)
+  const isDriver  = uid === ride.driverId
+  const isBooked  = ride.riders.some(r => r.uid === uid)
   const isFull    = ride.availableSeats < 1
   const isClosed  = ride.status !== 'open'
 
@@ -189,11 +253,16 @@ export function RideDetail() {
           )}
         </div>
 
-        {/* Driver status */}
-        {(isBooked || isDriver) && (
+        {/* Driver status banner — visible to booked riders */}
+        {isBooked && !isDriver && (
           <div style={{ marginBottom: '16px' }}>
             <DriverStatusBanner status={ride.driverStatus} />
           </div>
+        )}
+
+        {/* Driver controls — only the driver sees these */}
+        {isDriver && !isClosed && (
+          <DriverControls rideId={ride.id} currentStatus={ride.driverStatus} />
         )}
 
         {/* Driver */}
