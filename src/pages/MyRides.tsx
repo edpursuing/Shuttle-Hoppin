@@ -106,7 +106,7 @@ type Tab = 'driving' | 'riding'
 export function MyRides() {
   const { uid, user }                         = useAuthStore()
   const { driverRides, riderRides, loading }  = useMyRides(uid)
-  const [tab, setTab]                         = useState<Tab>('riding')
+  const [tab, setTab]                         = useState<Tab>('driving')
 
   // Default to driving tab if user is a driver
   const defaultTab: Tab = user?.hasCar ? 'driving' : 'riding'
