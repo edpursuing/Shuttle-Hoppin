@@ -72,6 +72,21 @@ export function TopNav() {
         })}
       </div>
 
+      {/* Post a ride — drivers only */}
+      {user?.hasCar && (
+        <button
+          onClick={() => navigate('/offer')}
+          style={{
+            padding: '7px 14px', borderRadius: '7px',
+            background: '#2E86C1', color: '#fff',
+            fontSize: '13px', fontWeight: 600,
+            border: 'none', cursor: 'pointer', flexShrink: 0,
+          }}
+        >
+          Post a ride
+        </button>
+      )}
+
       {/* User avatar */}
       {user && (
         <button

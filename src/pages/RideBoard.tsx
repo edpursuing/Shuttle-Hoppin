@@ -20,8 +20,6 @@ function Sidebar({
   stopFilter: string | null
   onStopFilterChange: (s: string | null) => void
 }) {
-  const navigate    = useNavigate()
-  const { user }    = useAuthStore()
   const filterStops = STOPS.filter(s => !s.isSpecial)
 
   return (
@@ -83,27 +81,6 @@ function Sidebar({
         </div>
       </div>
 
-      {/* Offer a ride card — drivers only, pinned to bottom */}
-      {user?.hasCar && (
-        <div style={{ marginTop: 'auto', padding: '0 16px' }}>
-          <div style={{ background: '#1A1A1A', borderRadius: '12px', padding: '16px' }}>
-            <p style={{ fontSize: '12px', color: '#999', marginBottom: '4px' }}>Going home tonight?</p>
-            <p style={{ fontSize: '13px', color: '#ccc', marginBottom: '14px', lineHeight: 1.4 }}>
-              Post a ride and help a fellow get to the train.
-            </p>
-            <button
-              onClick={() => navigate('/offer')}
-              style={{
-                width: '100%', padding: '10px', borderRadius: '8px',
-                background: '#2E86C1', color: '#fff',
-                fontSize: '13px', fontWeight: 600, border: 'none', cursor: 'pointer',
-              }}
-            >
-              Post a ride
-            </button>
-          </div>
-        </div>
-      )}
     </aside>
   )
 }
