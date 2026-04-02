@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
 
 const SLACK_OAUTH_URL = [
-  'https://slack.com/oauth/v2/authorize',
+  'https://pursuit-core.slack.com/oauth/v2/authorize',
   `?client_id=${import.meta.env.VITE_SLACK_CLIENT_ID}`,
   `&scope=chat:write,im:write,users:read,users:read.email`,
   `&user_scope=identity.basic`,
