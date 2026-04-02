@@ -9,11 +9,6 @@ import type { Ride } from '../utils/types'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function formatTime(seconds: number): string {
-  return new Date(seconds * 1000).toLocaleTimeString('en-US', {
-    hour: 'numeric', minute: '2-digit', weekday: 'short',
-  })
-}
 
 const STATUS_STYLE: Record<string, { label: string; color: string; bg: string }> = {
   open:        { label: 'Open',       color: '#2E86C1', bg: '#EBF4FB' },
@@ -40,7 +35,7 @@ function RideRow({ ride }: { ride: Ride }) {
       onClick={() => navigate(`/ride/${ride.id}`)}
       style={{
         padding: '14px 16px',
-        borderBottom: '1px solid #F0F0EE',
+        borderBottom: '1px solid #2A2A2A',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
@@ -69,7 +64,7 @@ function RideRow({ ride }: { ride: Ride }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' }}>
           <span style={{ fontSize: '13px', color: '#888' }}>{fromLabel}</span>
           <span style={{ fontSize: '11px', color: '#ccc' }}>→</span>
-          <span style={{ fontSize: '13px', fontWeight: 500, color: '#111' }}>{toLabel}</span>
+          <span style={{ fontSize: '13px', fontWeight: 500, color: '#fff' }}>{toLabel}</span>
           {toBadges.map(l => <MtaBadge key={l.name} {...l} size="sm" />)}
         </div>
         <p style={{ fontSize: '12px', color: '#aaa', margin: 0 }}>
@@ -108,8 +103,6 @@ export function MyRides() {
   const { driverRides, riderRides, loading }  = useMyRides(uid)
   const [tab, setTab]                         = useState<Tab>('driving')
 
-  // Default to driving tab if user is a driver
-  const defaultTab: Tab = user?.hasCar ? 'driving' : 'riding'
   const activeTab = user?.hasCar ? tab : 'riding'
 
   return (
@@ -118,10 +111,10 @@ export function MyRides() {
 
         {/* Header */}
         <div style={{
-          background: '#fff', borderBottom: '1px solid #E0E0E0',
+          background: '#1A1A1A', borderBottom: '1px solid #333',
           padding: '20px 20px 0',
         }}>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#111', margin: '0 0 16px' }}>My Rides</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', margin: '0 0 16px' }}>My Rides</h1>
 
           {/* Tabs — only show if user is a driver */}
           {user?.hasCar && (
@@ -142,7 +135,7 @@ export function MyRides() {
                   {t}
                   <span style={{
                     marginLeft: '6px', fontSize: '11px',
-                    background: activeTab === t ? '#EBF4FB' : '#F5F5F5',
+                    background: activeTab === t ? '#1A2D3E' : '#2A2A2A',
                     color: activeTab === t ? '#2E86C1' : '#aaa',
                     padding: '1px 6px', borderRadius: '10px',
                   }}>
@@ -155,7 +148,7 @@ export function MyRides() {
         </div>
 
         {/* Content */}
-        <div style={{ background: '#fff', borderBottom: '1px solid #E0E0E0' }}>
+        <div style={{ background: '#1E1E1E', borderBottom: '1px solid #333' }}>
           {loading ? (
             <div style={{ padding: '40px', textAlign: 'center', color: '#aaa', fontSize: '14px' }}>
               Loading…

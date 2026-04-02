@@ -53,7 +53,14 @@ function DriverStatusBanner({ status }: { status: string }) {
 
 // ── Rider row ─────────────────────────────────────────────────────────────────
 
-function RiderRow({ name, avatarUrl }: { name: string; avatarUrl: string }) {
+function timeAgo(seconds: number): string {
+  const diff = Math.floor(Date.now() / 1000 - seconds)
+  if (diff < 60)  return 'just now'
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`
+  return `${Math.floor(diff / 3600)}h ago`
+}
+
+function RiderRow({ name, avatarUrl, bookedAt }: { name: string; avatarUrl: string; bookedAt?: number }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0' }}>
       <div style={{
@@ -66,7 +73,10 @@ function RiderRow({ name, avatarUrl }: { name: string; avatarUrl: string }) {
           : <span style={{ fontSize: '10px', fontWeight: 600, color: '#aaa' }}>{initials(name)}</span>
         }
       </div>
-      <span style={{ fontSize: '13px', color: '#ccc' }}>{name}</span>
+      <span style={{ fontSize: '13px', color: '#ccc', flex: 1 }}>{name}</span>
+      {bookedAt && (
+        <span style={{ fontSize: '11px', color: '#555' }}>Booked {timeAgo(bookedAt)}</span>
+      )}
     </div>
   )
 }
@@ -94,7 +104,7 @@ function DriverControls({ rideId, currentStatus }: { rideId: string; currentStat
   }
 
   return (
-    <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0', padding: '16px', marginBottom: '12px' }}>
+    <div style={{ background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333', padding: '16px', marginBottom: '12px' }}>
       <p style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>
         Your status
       </p>
@@ -109,9 +119,9 @@ function DriverControls({ rideId, currentStatus }: { rideId: string; currentStat
               style={{
                 padding: '10px 14px',
                 borderRadius: '8px',
-                border: active ? '1.5px solid #2E86C1' : '1.5px solid #E0E0E0',
-                background: active ? '#EBF4FB' : '#fff',
-                color: active ? '#2E86C1' : '#555',
+                border: active ? '1.5px solid #2E86C1' : '1.5px solid #333',
+                background: active ? '#1A2D3E' : '#2A2A2A',
+                color: active ? '#2E86C1' : '#888',
                 fontSize: '13px',
                 fontWeight: active ? 500 : 400,
                 cursor: updating ? 'not-allowed' : 'pointer',
@@ -139,7 +149,7 @@ function DriverControls({ rideId, currentStatus }: { rideId: string; currentStat
 export function RideDetail() {
   const { rideId }    = useParams<{ rideId: string }>()
   const navigate      = useNavigate()
-  const { user, uid } = useAuthStore()
+  const { uid } = useAuthStore()
   const { ride, loading, notFound } = useRideDetail(rideId ?? '')
   const [acting, setActing]         = useState(false)
   const [error, setError]           = useState<string | null>(null)
@@ -158,7 +168,7 @@ export function RideDetail() {
     return (
       <AppLayout>
         <div style={{ textAlign: 'center', padding: '80px' }}>
-          <p style={{ fontSize: '15px', color: '#333', marginBottom: '8px' }}>Ride not found</p>
+          <p style={{ fontSize: '15px', color: '#aaa', marginBottom: '8px' }}>Ride not found</p>
           <button onClick={() => navigate('/board')} style={{ background: 'none', border: 'none', color: '#2E86C1', fontSize: '13px', cursor: 'pointer' }}>
             Back to board
           </button>
@@ -266,7 +276,7 @@ export function RideDetail() {
         )}
 
         {/* Driver */}
-        <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0', padding: '16px', marginBottom: '12px' }}>
+        <div style={{ background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333', padding: '16px', marginBottom: '12px' }}>
           <p style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '12px' }}>Driver</p>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
@@ -280,7 +290,7 @@ export function RideDetail() {
               }
             </div>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: 500, color: '#111' }}>{ride.driverName}</p>
+              <p style={{ fontSize: '14px', fontWeight: 500, color: '#fff' }}>{ride.driverName}</p>
               <p style={{ fontSize: '12px', color: '#888' }}>
                 {ride.totalSeats - ride.availableSeats} / {ride.totalSeats} seats filled
               </p>
@@ -289,20 +299,32 @@ export function RideDetail() {
         </div>
 
         {/* Riders */}
-        {ride.riders.length > 0 && (
-          <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0', padding: '16px', marginBottom: '12px' }}>
-            <p style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-              Riders ({ride.riders.length})
-            </p>
-            <div style={{ borderTop: '1px solid #F0F0EE', marginTop: '8px' }}>
-              {ride.riders.map(r => (
-                <div key={r.uid} style={{ borderBottom: '1px solid #F0F0EE' }}>
-                  <RiderRow name={r.displayName} avatarUrl={r.avatarUrl} />
+        <div style={{ background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333', padding: '16px', marginBottom: '12px' }}>
+          <p style={{ fontSize: '11px', color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+            Riders ({ride.riders.length})
+          </p>
+          <div style={{ borderTop: '1px solid #2A2A2A', marginTop: '8px' }}>
+            {ride.riders.map(r => (
+              <div key={r.uid} style={{ borderBottom: '1px solid #2A2A2A' }}>
+                <RiderRow name={r.displayName} avatarUrl={r.avatarUrl} bookedAt={r.bookedAt?.seconds} />
+              </div>
+            ))}
+            {Array.from({ length: ride.availableSeats }).map((_, i) => (
+              <div key={`open-${i}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid #2A2A2A' }}>
+                <div style={{
+                  width: '28px', height: '28px', borderRadius: '50%', flexShrink: 0,
+                  border: '1.5px dashed #444',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  </svg>
                 </div>
-              ))}
-            </div>
+                <span style={{ fontSize: '12px', color: '#555' }}>Open seat</span>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Error */}
         {error && (
@@ -314,26 +336,43 @@ export function RideDetail() {
         {/* Action — riders only (not driver, not closed) */}
         {!isDriver && !isClosed && (
           isBooked ? (
-            <button
-              onClick={handleCancel}
-              disabled={acting}
-              style={{
-                width: '100%', padding: '14px', borderRadius: '10px',
-                background: 'none', border: '1.5px solid #E0E0E0',
-                color: acting ? '#bbb' : '#E05252',
-                fontSize: '15px', fontWeight: 500,
-                cursor: acting ? 'not-allowed' : 'pointer',
-              }}
-            >
-              {acting ? 'Cancelling…' : 'Cancel booking'}
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={handleCancel}
+                disabled={acting}
+                style={{
+                  flex: 1, padding: '14px', borderRadius: '10px',
+                  background: 'none', border: '1.5px solid #444',
+                  color: acting ? '#bbb' : '#E05252',
+                  fontSize: '15px', fontWeight: 500,
+                  cursor: acting ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {acting ? 'Cancelling…' : 'Cancel booking'}
+              </button>
+              <a
+                href={`slack://user?team=TCVA3PF24&id=${ride.driverId}`}
+                style={{
+                  flex: 1, padding: '14px', borderRadius: '10px',
+                  background: '#4A154B', border: 'none',
+                  color: '#fff', fontSize: '15px', fontWeight: 500,
+                  cursor: 'pointer', textDecoration: 'none',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff">
+                  <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/>
+                </svg>
+                Message driver
+              </a>
+            </div>
           ) : (
             <button
               onClick={handleBook}
               disabled={acting || isFull}
               style={{
                 width: '100%', padding: '14px', borderRadius: '10px',
-                background: isFull ? '#F0F0EE' : (acting ? '#ccc' : '#2E86C1'),
+                background: isFull ? '#2A2A2A' : (acting ? '#555' : '#2E86C1'),
                 border: 'none',
                 color: isFull ? '#888' : '#fff',
                 fontSize: '15px', fontWeight: 600,

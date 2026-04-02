@@ -21,8 +21,8 @@ function formatTime(t: string): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0', marginBottom: '12px', overflow: 'hidden' }}>
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid #F0F0EE' }}>
+    <div style={{ background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333', marginBottom: '12px', overflow: 'hidden' }}>
+      <div style={{ padding: '12px 16px', borderBottom: '1px solid #2A2A2A' }}>
         <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
           {title}
         </p>
@@ -36,9 +36,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #F8F8F8' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #2A2A2A' }}>
       <span style={{ fontSize: '13px', color: '#888' }}>{label}</span>
-      <div style={{ fontSize: '13px', color: '#111', fontWeight: 500 }}>{children}</div>
+      <div style={{ fontSize: '13px', color: '#fff', fontWeight: 500 }}>{children}</div>
     </div>
   )
 }
@@ -68,7 +68,7 @@ export function ProfilePage() {
             width: '56px', height: '56px', borderRadius: '50%', flexShrink: 0,
             background: user.avatarUrl ? 'transparent' : '#2E86C1',
             overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '1px solid #E0E0E0',
+            border: '1px solid #333',
           }}>
             {user.avatarUrl
               ? <img src={user.avatarUrl} alt={user.displayName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -76,7 +76,7 @@ export function ProfilePage() {
             }
           </div>
           <div>
-            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#111', margin: '0 0 2px' }}>{user.displayName}</h1>
+            <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', margin: '0 0 2px' }}>{user.displayName}</h1>
             <p style={{ fontSize: '13px', color: '#888', margin: 0 }}>{user.email}</p>
           </div>
         </div>
@@ -84,7 +84,7 @@ export function ProfilePage() {
         {/* Stats */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
-          background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0',
+          background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333',
           marginBottom: '12px', overflow: 'hidden',
         }}>
           {[
@@ -97,10 +97,10 @@ export function ProfilePage() {
               style={{
                 padding: '16px',
                 textAlign: 'center',
-                borderRight: i < 2 ? '1px solid #E0E0E0' : 'none',
+                borderRight: i < 2 ? '1px solid #333' : 'none',
               }}
             >
-              <p style={{ fontSize: '24px', fontWeight: 600, color: '#111', margin: '0 0 4px' }}>{stat.value}</p>
+              <p style={{ fontSize: '24px', fontWeight: 600, color: '#fff', margin: '0 0 4px' }}>{stat.value}</p>
               <p style={{ fontSize: '11px', color: '#999' }}>{stat.label}</p>
             </div>
           ))}

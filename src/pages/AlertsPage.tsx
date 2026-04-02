@@ -4,14 +4,14 @@ export function AlertsPage() {
   return (
     <AppLayout>
       <div style={{ maxWidth: '560px', margin: '0 auto', padding: '28px 20px' }}>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#111', margin: '0 0 24px' }}>Alerts</h1>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#fff', margin: '0 0 24px' }}>Alerts</h1>
         <div style={{
-          background: '#fff', borderRadius: '12px', border: '1px solid #E0E0E0',
+          background: '#1E1E1E', borderRadius: '12px', border: '1px solid #333',
           padding: '48px 24px', textAlign: 'center',
         }}>
           <div style={{
             width: '44px', height: '44px', borderRadius: '10px',
-            background: '#F0F0EE', border: '1px solid #E0E0E0',
+            background: '#2A2A2A', border: '1px solid #333',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 14px',
           }}>
@@ -20,7 +20,7 @@ export function AlertsPage() {
               <path d="M13.73 21a2 2 0 01-3.46 0" />
             </svg>
           </div>
-          <p style={{ fontSize: '15px', fontWeight: 500, color: '#333', marginBottom: '6px' }}>No alerts yet</p>
+          <p style={{ fontSize: '15px', fontWeight: 500, color: '#ccc', marginBottom: '6px' }}>No alerts yet</p>
           <p style={{ fontSize: '13px', color: '#999', lineHeight: 1.6, maxWidth: '220px', margin: '0 auto' }}>
             Ride alerts and updates will appear here.
           </p>

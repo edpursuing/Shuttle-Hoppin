@@ -23,9 +23,9 @@ function SeatPicker({ value, onChange }: { value: number; onChange: (n: number) 
               width: '40px',
               height: '40px',
               borderRadius: '8px',
-              border: selected ? '1.5px solid #2E86C1' : '1.5px solid #E0E0E0',
-              background: selected ? '#2E86C1' : '#fff',
-              color: selected ? '#fff' : '#333',
+              border: selected ? '1.5px solid #2E86C1' : '1.5px solid #444',
+              background: selected ? '#2E86C1' : '#2A2A2A',
+              color: selected ? '#fff' : '#888',
               fontSize: '15px',
               fontWeight: selected ? 600 : 400,
               cursor: 'pointer',
@@ -50,7 +50,7 @@ function SegmentedControl<T extends string>({ options, value, onChange }: {
   return (
     <div style={{
       display: 'inline-flex',
-      background: '#F5F5F5',
+      background: '#1A1A1A',
       borderRadius: '8px',
       padding: '3px',
       gap: '2px',
@@ -64,9 +64,9 @@ function SegmentedControl<T extends string>({ options, value, onChange }: {
             style={{
               padding: '8px 16px',
               borderRadius: '6px',
-              border: active ? '1px solid #E0E0E0' : 'none',
-              background: active ? '#fff' : 'transparent',
-              color: active ? '#111' : '#888',
+              border: active ? '1px solid #444' : 'none',
+              background: active ? '#2A2A2A' : 'transparent',
+              color: active ? '#fff' : '#888',
               fontSize: '13px',
               fontWeight: active ? 500 : 400,
               cursor: 'pointer',
@@ -166,11 +166,11 @@ export function OfferRide() {
   }
 
   return (
-    <div style={{ background: '#F7F6F4', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
+    <div style={{ background: '#242424', minHeight: '100vh', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}>
       {/* Header */}
       <div style={{
-        background: '#fff',
-        borderBottom: '1px solid #E0E0E0',
+        background: '#1A1A1A',
+        borderBottom: '1px solid #333',
         padding: '16px 20px',
         display: 'flex',
         alignItems: 'center',
@@ -184,7 +184,7 @@ export function OfferRide() {
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </button>
-        <h1 style={{ fontSize: '17px', fontWeight: 600, color: '#111', margin: 0 }}>
+        <h1 style={{ fontSize: '17px', fontWeight: 600, color: '#fff', margin: 0 }}>
           Offer a ride
         </h1>
       </div>
@@ -215,12 +215,12 @@ export function OfferRide() {
                   min={new Date().toISOString().split('T')[0]}
                   onChange={e => setDate(e.target.value)}
                   style={{
-                    background: '#fff',
-                    border: '1px solid #E0E0E0',
+                    background: '#1A1A1A',
+                    border: '1px solid #444',
                     borderRadius: '8px',
                     padding: '10px 12px',
                     fontSize: '14px',
-                    color: '#111',
+                    color: '#fff',
                     width: '100%',
                   }}
                 />
@@ -231,12 +231,12 @@ export function OfferRide() {
                   value={time}
                   onChange={e => setTime(e.target.value)}
                   style={{
-                    background: '#fff',
-                    border: '1px solid #E0E0E0',
+                    background: '#1A1A1A',
+                    border: '1px solid #444',
                     borderRadius: '8px',
                     padding: '10px 12px',
                     fontSize: '14px',
-                    color: '#111',
+                    color: '#fff',
                     width: '100%',
                   }}
                 />
@@ -274,12 +274,12 @@ export function OfferRide() {
               value={passingThrough}
               onChange={e => setPassingThrough(e.target.value)}
               style={{
-                background: '#fff',
-                border: '1px solid #E0E0E0',
+                background: '#1A1A1A',
+                border: '1px solid #444',
                 borderRadius: '8px',
                 padding: '10px 14px',
                 fontSize: '14px',
-                color: '#111',
+                color: '#fff',
                 width: '100%',
               }}
             />
@@ -302,8 +302,8 @@ export function OfferRide() {
         bottom: 0,
         left: 0,
         right: 0,
-        background: '#fff',
-        borderTop: '1px solid #E0E0E0',
+        background: '#1A1A1A',
+        borderTop: '1px solid #333',
         padding: '16px 20px',
         maxWidth: '480px',
         margin: '0 auto',

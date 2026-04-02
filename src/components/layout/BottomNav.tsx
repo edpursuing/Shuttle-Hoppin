@@ -64,8 +64,8 @@ export function BottomNav() {
 
   return (
     <nav style={{
-      background: '#fff',
-      borderTop: '1px solid #EEEEEE',
+      background: '#1A1A1A',
+      borderTop: '1px solid #333',
       display: 'flex',
       alignItems: 'flex-end',
       padding: '0 0 8px',

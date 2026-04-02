@@ -25,7 +25,7 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
             flex: 1,
             height: '3px',
             borderRadius: '2px',
-            background: i < step ? '#2E86C1' : '#E0E0E0',
+            background: i < step ? '#2E86C1' : '#333',
             transition: 'background 0.2s',
           }}
         />
@@ -42,7 +42,7 @@ function StepHeader({ step, total, title, subtitle }: {
       <p style={{ fontSize: '12px', color: '#999', marginBottom: '6px' }}>
         Step {step} of {total}
       </p>
-      <h1 style={{ fontSize: '22px', fontWeight: 600, color: '#111', marginBottom: '6px' }}>
+      <h1 style={{ fontSize: '22px', fontWeight: 600, color: '#fff', marginBottom: '6px' }}>
         {title}
       </h1>
       {subtitle && (
@@ -223,9 +223,9 @@ function Step3CarAccess({ value, onChange }: {
       />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {([
-          { val: true,  label: 'Yes, I drive', icon: '🚗', desc: "I can offer rides to other fellows" },
-          { val: false, label: 'Rider only',   icon: '🎒', desc: "I'm looking for rides" },
-        ] as const).map(({ val, label, icon, desc }) => {
+          { val: true,  label: 'Yes, I drive', desc: "I can offer rides to other fellows" },
+          { val: false, label: 'Rider only',   desc: "I'm looking for rides" },
+        ] as const).map(({ val, label, desc }) => {
           const selected = value === val
           return (
             <button
@@ -244,7 +244,6 @@ function Step3CarAccess({ value, onChange }: {
                 width: '100%',
               }}
             >
-              <span style={{ fontSize: '28px' }}>{icon}</span>
               <div>
                 <p style={{ fontSize: '15px', fontWeight: 600, color: selected ? '#fff' : '#ccc', marginBottom: '2px' }}>
                   {label}
@@ -396,7 +395,7 @@ export function OnboardingFlow() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: '#242424' }}>
       <div style={{ flex: 1, maxWidth: '420px', margin: '0 auto', width: '100%', padding: '48px 24px 24px' }}>
         <ProgressBar step={step} total={4} />
 

@@ -35,7 +35,7 @@ export function DirectionToggle({ value, onChange, layout = 'horizontal' }: Dire
                 transition: 'background 0.15s, color 0.15s',
               }}
               onMouseEnter={e => {
-                if (!active) (e.currentTarget as HTMLButtonElement).style.background = '#F5F5F5'
+                if (!active) (e.currentTarget as HTMLButtonElement).style.background = '#2A2A2A'
               }}
               onMouseLeave={e => {
                 if (!active) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'
@@ -52,7 +52,7 @@ export function DirectionToggle({ value, onChange, layout = 'horizontal' }: Dire
   return (
     <div style={{
       display: 'inline-flex',
-      background: '#F5F5F5',
+      background: '#1A1A1A',
       borderRadius: '8px',
       padding: '3px',
       gap: '2px',
@@ -66,9 +66,9 @@ export function DirectionToggle({ value, onChange, layout = 'horizontal' }: Dire
             style={{
               padding: '8px 16px',
               borderRadius: '6px',
-              border: active ? '1px solid #E0E0E0' : 'none',
-              background: active ? '#fff' : 'transparent',
-              color: active ? '#111' : '#888',
+              border: active ? '1px solid #444' : 'none',
+              background: active ? '#2A2A2A' : 'transparent',
+              color: active ? '#fff' : '#888',
               fontSize: '13px',
               fontWeight: active ? 500 : 400,
               cursor: 'pointer',

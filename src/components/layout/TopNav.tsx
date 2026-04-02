@@ -19,8 +19,8 @@ export function TopNav() {
   return (
     <nav style={{
       height: '56px',
-      background: '#fff',
-      borderBottom: '1px solid #E0E0E0',
+      background: '#1A1A1A',
+      borderBottom: '1px solid #333',
       display: 'flex',
       alignItems: 'center',
       padding: '0 24px',
@@ -43,7 +43,7 @@ export function TopNav() {
           <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#0039A6' }} />
           <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#FF6319' }} />
         </div>
-        <span style={{ fontSize: '15px', fontWeight: 600, color: '#111' }}>Hoppin'</span>
+        <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>Hoppin'</span>
       </button>
 
       {/* Nav links */}

@@ -29,7 +29,7 @@ export function LoginPage() {
   }, [initialized, uid, navigate])
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans" style={{ backgroundColor: '#242424' }}>
       {/* Main content — vertically and horizontally centered */}
       <div className="flex-1 flex flex-col items-center justify-center px-8">
 
@@ -49,7 +49,7 @@ export function LoginPage() {
         </div>
 
         {/* Title */}
-        <h1 style={{ fontSize: '28px', fontWeight: 500, color: '#111', marginBottom: '8px' }}>
+        <h1 style={{ fontSize: '28px', fontWeight: 500, color: '#fff', marginBottom: '8px' }}>
           Hoppin'
         </h1>
 

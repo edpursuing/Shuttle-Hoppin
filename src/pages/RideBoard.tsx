@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useRideBoard } from '../hooks/useRideBoard'
 import { useAuthStore } from '../stores/authStore'
 import { RideCard } from '../components/shared/RideCard'
@@ -14,11 +13,13 @@ import type { Direction } from '../utils/types'
 function Sidebar({
   direction, onDirectionChange,
   stopFilter, onStopFilterChange,
+  rides,
 }: {
   direction: Direction
   onDirectionChange: (d: Direction) => void
   stopFilter: string | null
   onStopFilterChange: (s: string | null) => void
+  rides: any[]
 }) {
   const filterStops = STOPS.filter(s => !s.isSpecial)
 
@@ -26,8 +27,8 @@ function Sidebar({
     <aside style={{
       width: '220px',
       flexShrink: 0,
-      background: '#fff',
-      borderRight: '1px solid #E0E0E0',
+      background: '#1E1E1E',
+      borderRight: '1px solid #333',
       minHeight: 'calc(100vh - 56px)',
       display: 'flex',
       flexDirection: 'column',
@@ -45,7 +46,7 @@ function Sidebar({
       </div>
 
       {/* Divider */}
-      <div style={{ height: '1px', background: '#E0E0E0', margin: '0 16px' }} />
+      <div style={{ height: '1px', background: '#333', margin: '0 16px' }} />
 
       {/* Stop filter */}
       <div style={{ padding: '0 16px' }}>
@@ -55,14 +56,15 @@ function Sidebar({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
           {[{ id: null, shortName: 'All stops', lines: [] as any[] }, ...filterStops].map(stop => {
             const active = stop.id === null ? stopFilter === null : stopFilter === stop.id
+            const count  = stop.id === null ? rides.length : rides.filter(r => r.stopId === stop.id).length
             return (
               <button
                 key={stop.id ?? 'all'}
                 onClick={() => onStopFilterChange(stop.id ?? null)}
                 style={{
                   width: '100%', padding: '8px 10px', borderRadius: '8px', border: 'none',
-                  background: active ? '#F0F0EE' : 'transparent',
-                  color: active ? '#111' : '#888',
+                  background: active ? '#2A2A2A' : 'transparent',
+                  color: active ? '#fff' : '#888',
                   fontSize: '13px', fontWeight: active ? 500 : 400,
                   cursor: 'pointer', textAlign: 'left',
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -70,11 +72,19 @@ function Sidebar({
                 }}
               >
                 <span>{stop.shortName}</span>
-                {stop.lines.length > 0 && (
-                  <div style={{ display: 'flex', gap: '3px' }}>
-                    {stop.lines.slice(0, 3).map((l: any) => <MtaBadge key={l.name} {...l} size="sm" />)}
-                  </div>
-                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  {stop.lines.length > 0 && (
+                    <div style={{ display: 'flex', gap: '3px' }}>
+                      {stop.lines.slice(0, 3).map((l: any) => <MtaBadge key={l.name} {...l} size="sm" />)}
+                    </div>
+                  )}
+                  <span style={{
+                    fontSize: '11px', fontWeight: 500, minWidth: '16px', textAlign: 'right',
+                    color: count > 0 ? (active ? '#fff' : '#666') : '#444',
+                  }}>
+                    {count}
+                  </span>
+                </div>
               </button>
             )
           })}
@@ -106,7 +116,7 @@ function EmptyState({ direction }: { direction: Direction }) {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 24px', textAlign: 'center' }}>
       <div style={{
         width: '48px', height: '48px', borderRadius: '12px',
-        background: '#F0F0EE', border: '1px solid #E0E0E0',
+        background: '#2A2A2A', border: '1px solid #333',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         marginBottom: '16px',
       }}>
@@ -116,7 +126,7 @@ function EmptyState({ direction }: { direction: Direction }) {
           <circle cx="16.5" cy="17.5" r="1.5" />
         </svg>
       </div>
-      <p style={{ fontSize: '15px', fontWeight: 500, color: '#333', marginBottom: '6px' }}>
+      <p style={{ fontSize: '15px', fontWeight: 500, color: '#ccc', marginBottom: '6px' }}>
         No rides right now
       </p>
       <p style={{ fontSize: '13px', color: '#999', maxWidth: '220px', lineHeight: 1.6 }}>
@@ -185,11 +195,11 @@ export function RideBoard() {
 
       {/* ── Mobile header ── */}
       <div className="md:hidden" style={{
-        background: '#fff', borderBottom: '1px solid #E0E0E0', padding: '12px 20px',
+        background: '#1A1A1A', borderBottom: '1px solid #333', padding: '12px 20px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
           <div>
-            <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#111', margin: 0 }}>Hoppin'</h1>
+            <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#fff', margin: 0 }}>Hoppin'</h1>
             <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
               {loading ? '…' : `${totalRides} ride${totalRides !== 1 ? 's' : ''} available`}
             </p>
@@ -219,12 +229,13 @@ export function RideBoard() {
           onDirectionChange={setDirection}
           stopFilter={stopFilter}
           onStopFilterChange={setStopFilter}
+          rides={[...leavingSoon, ...scheduled]}
         />
 
         <main style={{ flex: 1, padding: '28px 32px', maxWidth: '860px' }}>
           {/* Page heading */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #E0E0E0' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#111', margin: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #333' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#fff', margin: 0 }}>
               {direction === 'from-hq' ? 'Rides from HQ' : 'Rides to HQ'}
             </h2>
             {!loading && totalRides > 0 && (
