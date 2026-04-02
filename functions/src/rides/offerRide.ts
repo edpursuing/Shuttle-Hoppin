@@ -31,8 +31,25 @@ export const offerRide = onCall(async (request) => {
   if (!data.departureTime) {
     throw new HttpsError('invalid-argument', 'Departure time is required')
   }
+  const departureDate = new Date(data.departureTime)
+  if (isNaN(departureDate.getTime())) {
+    throw new HttpsError('invalid-argument', 'Departure time is not a valid date')
+  }
+  // Allow up to 5 minutes in the past (clock skew), reject anything older
+  if (departureDate.getTime() < Date.now() - 5 * 60 * 1000) {
+    throw new HttpsError('invalid-argument', 'Departure time cannot be in the past')
+  }
   if (!data.totalSeats || data.totalSeats < 1 || data.totalSeats > 8) {
     throw new HttpsError('invalid-argument', 'Seats must be between 1 and 8')
+  }
+  if (data.stopName && data.stopName.length > 100) {
+    throw new HttpsError('invalid-argument', 'Stop name is too long')
+  }
+  if (data.passingThrough && data.passingThrough.length > 100) {
+    throw new HttpsError('invalid-argument', 'Passing through is too long')
+  }
+  if (data.customLocation && data.customLocation.length > 100) {
+    throw new HttpsError('invalid-argument', 'Custom location is too long')
   }
 
   const db = getFirestore()
@@ -48,7 +65,7 @@ export const offerRide = onCall(async (request) => {
   }
 
   const now           = Timestamp.now()
-  const departureTime = Timestamp.fromDate(new Date(data.departureTime))
+  const departureTime = Timestamp.fromDate(departureDate)
 
   const rideRef = db.collection('rides').doc()
   await rideRef.set({
