@@ -49,6 +49,7 @@ export const STOPS: Omit<Stop, 'latitude' | 'longitude'>[] = [
     shortName: 'Court Sq',
     lines: [
       { name: 'E', color: '#0039A6', textColor: '#FFFFFF' },
+      { name: 'G', color: '#6CBE45', textColor: '#FFFFFF' },
       { name: 'M', color: '#FF6319', textColor: '#FFFFFF' },
       { name: '7', color: '#6E3A90', textColor: '#FFFFFF' },
     ],

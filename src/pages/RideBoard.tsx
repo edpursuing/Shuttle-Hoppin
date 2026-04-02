@@ -75,7 +75,7 @@ function Sidebar({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   {stop.lines.length > 0 && (
                     <div style={{ display: 'flex', gap: '3px' }}>
-                      {stop.lines.slice(0, 3).map((l: any) => <MtaBadge key={l.name} {...l} size="sm" />)}
+                      {stop.lines.map((l: any) => <MtaBadge key={l.name} {...l} size="sm" />)}
                     </div>
                   )}
                   <span style={{

@@ -74,7 +74,7 @@ export const DROPOFF_LOCATIONS: Location[] = [
   },
   {
     value: 'court_square',
-    label: 'Court Square - 23rd Street [E, M]',
+    label: 'Court Square - 23rd Street [E, G, M]',
     track: 'northbound',
     position: 2,
   },

@@ -11,6 +11,7 @@ import { STOPS } from '../utils/constants'
 const bookRideFn            = httpsCallable(functions, 'bookRide')
 const cancelBookingFn       = httpsCallable(functions, 'cancelBooking')
 const updateDriverStatusFn  = httpsCallable(functions, 'updateDriverStatus')
+const cancelRideFn          = httpsCallable(functions, 'cancelRide')
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -214,6 +215,19 @@ export function RideDetail() {
     }
   }
 
+  async function handleCancelRide() {
+    if (!confirm('Cancel this ride? Booked riders will be notified.')) return
+    setActing(true)
+    setError(null)
+    try {
+      await cancelRideFn({ rideId: ride!.id })
+      navigate('/board')
+    } catch (err: any) {
+      setError(err.message ?? 'Could not cancel ride')
+      setActing(false)
+    }
+  }
+
   return (
     <AppLayout>
       <div style={{ maxWidth: '560px', margin: '0 auto', padding: '24px 20px 48px' }}>
@@ -272,7 +286,22 @@ export function RideDetail() {
 
         {/* Driver controls — only the driver sees these */}
         {isDriver && !isClosed && (
-          <DriverControls rideId={ride.id} currentStatus={ride.driverStatus} />
+          <>
+            <DriverControls rideId={ride.id} currentStatus={ride.driverStatus} />
+            <button
+              onClick={handleCancelRide}
+              disabled={acting}
+              style={{
+                width: '100%', padding: '12px', borderRadius: '10px', marginBottom: '12px',
+                background: 'none', border: '1.5px solid #444',
+                color: acting ? '#888' : '#E05252',
+                fontSize: '14px', fontWeight: 500,
+                cursor: acting ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {acting ? 'Cancelling ride…' : 'Cancel ride'}
+            </button>
+          </>
         )}
 
         {/* Driver */}

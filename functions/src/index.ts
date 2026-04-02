@@ -13,6 +13,7 @@ import { offerRide } from './rides/offerRide'
 import { bookRide } from './rides/bookRide'
 import { cancelBooking } from './rides/cancelBooking'
 import { updateDriverStatus } from './rides/updateDriverStatus';
+import { cancelRide } from './rides/cancelRide';
 import { expireRides } from './rides/expireRides';
 
 // Initialize Firebase Admin
@@ -32,6 +33,7 @@ export { offerRide };
 export { bookRide };
 export { cancelBooking };
 export { updateDriverStatus };
+export { cancelRide };
 export { expireRides };
 
 export const slackHandler = functions.https.onRequest(async (req, res) => {
