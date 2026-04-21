@@ -8,6 +8,28 @@ import { AppLayout } from '../components/layout/AppLayout'
 import { STOPS } from '../utils/constants'
 import type { Direction } from '../utils/types'
 
+// ── Day grouping helpers ──────────────────────────────────────────────────────
+
+function groupByDay(rides: any[]): [string, any[]][] {
+  const groups = new Map<string, any[]>()
+  for (const r of rides) {
+    const key = new Date(r.departureTime.seconds * 1000).toDateString()
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key)!.push(r)
+  }
+  return Array.from(groups.entries())
+}
+
+function dayLabel(dateKey: string): string {
+  const date = new Date(dateKey)
+  const today = new Date()
+  const tomorrow = new Date(today)
+  tomorrow.setDate(today.getDate() + 1)
+  if (date.toDateString() === today.toDateString())    return 'Today'
+  if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow'
+  return date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+}
+
 // ── Sidebar (desktop only) ────────────────────────────────────────────────────
 
 function Sidebar({
@@ -169,14 +191,14 @@ function RideList({ leavingSoon, scheduled, loading, direction, isDesktop }: {
           </div>
         </div>
       )}
-      {scheduled.length > 0 && (
-        <div>
-          <SectionLabel>Scheduled</SectionLabel>
+      {scheduled.length > 0 && groupByDay(scheduled).map(([dayKey, dayRides]) => (
+        <div key={dayKey} style={{ marginBottom: '24px' }}>
+          <SectionLabel>{dayLabel(dayKey)}</SectionLabel>
           <div style={gridStyle}>
-            {scheduled.map(ride => <RideCard key={ride.id} ride={ride} />)}
+            {dayRides.map(ride => <RideCard key={ride.id} ride={ride} />)}
           </div>
         </div>
-      )}
+      ))}
     </>
   )
 }
@@ -199,7 +221,7 @@ export function RideBoard() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
           <div>
-            <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#fff', margin: 0 }}>Hoppin'</h1>
+            <h1 style={{ fontSize: '22px', fontWeight: 500, color: '#fff', margin: 0 }}>Hop In!</h1>
             <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
               {loading ? '…' : `${totalRides} ride${totalRides !== 1 ? 's' : ''} available`}
             </p>
@@ -234,15 +256,20 @@ export function RideBoard() {
 
         <main style={{ flex: 1, padding: '28px 32px', maxWidth: '860px' }}>
           {/* Page heading */}
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #333' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#fff', margin: 0 }}>
-              {direction === 'from-hq' ? 'Rides from HQ' : 'Rides to HQ'}
-            </h2>
-            {!loading && totalRides > 0 && (
-              <span style={{ fontSize: '13px', color: '#999' }}>
-                {totalRides} available
-              </span>
-            )}
+          <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #333' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '6px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#fff', margin: 0 }}>
+                {direction === 'from-hq' ? 'Rides from HQ' : 'Rides to HQ'}
+              </h2>
+              {!loading && totalRides > 0 && (
+                <span style={{ fontSize: '13px', color: '#999' }}>
+                  {totalRides} available
+                </span>
+              )}
+            </div>
+            <p style={{ fontSize: '13px', color: '#999', margin: 0 }}>
+              Pursuit fellows driving fellows to transit — and beyond.
+            </p>
           </div>
 
           <RideList

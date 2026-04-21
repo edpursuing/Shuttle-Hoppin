@@ -50,7 +50,7 @@ export function LoginPage() {
 
         {/* Title */}
         <h1 style={{ fontSize: '28px', fontWeight: 500, color: '#fff', marginBottom: '8px' }}>
-          Hoppin'
+          Hop In!
         </h1>
 
         {/* Tagline */}

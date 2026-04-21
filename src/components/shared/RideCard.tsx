@@ -86,7 +86,7 @@ export function RideCard({ ride, isUrgent = false }: RideCardProps) {
       </div>
 
       {/* TO */}
-      <div style={{ marginBottom: ride.passingThrough ? '6px' : '10px' }}>
+      <div style={{ marginBottom: ride.passingThrough ? '8px' : '10px' }}>
         <p style={{ fontSize: '10px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 3px' }}>
           TO
         </p>
@@ -98,11 +98,16 @@ export function RideCard({ ride, isUrgent = false }: RideCardProps) {
         </div>
       </div>
 
-      {/* Passing through */}
+      {/* Continues to */}
       {ride.passingThrough && (
-        <p style={{ fontSize: '11px', color: '#555', margin: '0 0 10px' }}>
-          Via {ride.passingThrough}
-        </p>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '10px', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 3px' }}>
+            CONTINUES TO
+          </p>
+          <span style={{ fontSize: '15px', fontWeight: 500, color: '#fff' }}>
+            {ride.passingThrough}
+          </span>
+        </div>
       )}
 
       {/* Bottom row */}

@@ -262,7 +262,7 @@ export function RideDetail() {
           </div>
 
           {/* TO */}
-          <div style={{ marginBottom: ride.passingThrough ? '8px' : '0' }}>
+          <div style={{ marginBottom: ride.passingThrough ? '12px' : '0' }}>
             <p style={{ fontSize: '10px', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>TO</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '18px', fontWeight: 500, color: '#fff' }}>
@@ -273,7 +273,10 @@ export function RideDetail() {
           </div>
 
           {ride.passingThrough && (
-            <p style={{ fontSize: '12px', color: '#555', marginTop: '6px' }}>Via {ride.passingThrough}</p>
+            <div>
+              <p style={{ fontSize: '10px', color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px' }}>CONTINUES TO</p>
+              <span style={{ fontSize: '18px', fontWeight: 500, color: '#fff' }}>{ride.passingThrough}</span>
+            </div>
           )}
         </div>
 

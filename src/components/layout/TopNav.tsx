@@ -43,7 +43,7 @@ export function TopNav() {
           <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#0039A6' }} />
           <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#FF6319' }} />
         </div>
-        <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>Hoppin'</span>
+        <span style={{ fontSize: '15px', fontWeight: 600, color: '#fff' }}>Hop In!</span>
       </button>
 
       {/* Nav links */}

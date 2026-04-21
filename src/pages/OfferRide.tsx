@@ -266,11 +266,11 @@ export function OfferRide() {
             />
           </Field>
 
-          {/* Passing through */}
-          <Field label="Passing through (optional)">
+          {/* Continues to */}
+          <Field label="Continues to (optional)">
             <input
               type="text"
-              placeholder="e.g. Queensboro Plaza"
+              placeholder="e.g. Corona, Jackson Heights"
               value={passingThrough}
               onChange={e => setPassingThrough(e.target.value)}
               style={{
