@@ -73,10 +73,10 @@ function Sidebar({
       {/* Stop filter */}
       <div style={{ padding: '0 16px' }}>
         <p style={{ fontSize: '11px', fontWeight: 500, color: '#999', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 8px 2px' }}>
-          Stop
+          {direction === 'from-hq' ? 'Destinations' : 'Pickup points'}
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          {[{ id: null, shortName: 'All stops', lines: [] as any[] }, ...filterStops].map(stop => {
+          {[{ id: null, shortName: 'All rides', lines: [] as any[] }, ...filterStops].map(stop => {
             const active = stop.id === null ? stopFilter === null : stopFilter === stop.id
             const count  = stop.id === null ? rides.length : rides.filter(r => r.stopId === stop.id).length
             return (
@@ -259,7 +259,7 @@ export function RideBoard() {
           <div style={{ marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #333' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '6px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: 600, color: '#fff', margin: 0 }}>
-                {direction === 'from-hq' ? 'Rides from HQ' : 'Rides to HQ'}
+                {direction === 'from-hq' ? 'Rides from Pursuit HQ' : 'Rides to Pursuit HQ'}
               </h2>
               {!loading && totalRides > 0 && (
                 <span style={{ fontSize: '13px', color: '#999' }}>
