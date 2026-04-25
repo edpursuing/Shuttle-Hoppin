@@ -109,6 +109,7 @@ export function OfferRide() {
   const [error, setError]     = useState<string | null>(null)
 
   const [mode, setMode]           = useState<RideMode>('now')
+  const [soonOffset, setSoonOffset] = useState<number>(15)
   const [direction, setDirection] = useState<Direction>('from-hq')
   const [stopId, setStopId]       = useState<string | null>(null)
   const [stopName, setStopName]   = useState('')
@@ -130,7 +131,7 @@ export function OfferRide() {
   }
 
   function buildDepartureTime(): string {
-    if (mode === 'now') return new Date().toISOString()
+    if (mode === 'now') return new Date(Date.now() + soonOffset * 60000).toISOString()
     if (!date || !time) return new Date().toISOString()
     return new Date(`${date}T${time}`).toISOString()
   }
@@ -195,14 +196,46 @@ export function OfferRide() {
 
           {/* Mode */}
           <Field label="When">
-            <SegmentedControl
-              options={[
-                { value: 'now',   label: 'Leaving now' },
-                { value: 'later', label: 'Schedule' },
-              ]}
-              value={mode}
-              onChange={setMode}
-            />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <SegmentedControl
+                options={[
+                  { value: 'now',   label: 'Leaving soon' },
+                  { value: 'later', label: 'Schedule' },
+                ]}
+                value={mode}
+                onChange={setMode}
+              />
+              {mode === 'now' && (
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {[
+                    { value: 15, label: '+15m' },
+                    { value: 30, label: '+30m' },
+                    { value: 45, label: '+45m' },
+                    { value: 60, label: '+1h' },
+                  ].map(opt => {
+                    const selected = soonOffset === opt.value
+                    return (
+                      <button
+                        key={opt.value}
+                        onClick={() => setSoonOffset(opt.value)}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          border: selected ? '1.5px solid #2E86C1' : '1.5px solid #444',
+                          background: selected ? '#2E86C1' : '#2A2A2A',
+                          color: selected ? '#fff' : '#888',
+                          fontSize: '13px',
+                          fontWeight: selected ? 600 : 400,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        {opt.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
           </Field>
 
           {/* Date + time — schedule mode only */}
